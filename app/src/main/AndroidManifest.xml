@@ -23,6 +23,7 @@
             android:name=".ArticleListActivity"
             android:launchMode="singleTop"
             android:parentActivityName=".MainActivity"
+            android:screenOrientation="locked"
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -31,6 +32,7 @@
         <activity
             android:name=".ArticleDetailActivity"
             android:parentActivityName=".ArticleListActivity"
+            android:screenOrientation="locked"
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"

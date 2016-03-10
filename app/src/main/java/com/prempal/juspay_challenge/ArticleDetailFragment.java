@@ -23,6 +23,8 @@ public class ArticleDetailFragment extends Fragment {
     private CollapsingToolbarLayout appBarLayout;
     private ImageView backdrop;
     private TextView article;
+    private ImageView articleImage;
+    private TextView articleTitle;
 
     public ArticleDetailFragment() {
     }
@@ -50,7 +52,9 @@ public class ArticleDetailFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.article_detail, container, false);
-        article = (TextView) rootView.findViewById(R.id.article_detail);
+        article = (TextView) rootView.findViewById(R.id.tv_article_text);
+        articleImage = (ImageView) rootView.findViewById(R.id.iv_article_image);
+        articleTitle = (TextView) rootView.findViewById(R.id.tv_article_title);
         return rootView;
     }
 
@@ -74,15 +78,22 @@ public class ArticleDetailFragment extends Fragment {
         @Override
         protected void onPostExecute(Void aVoid) {
 
-            if (appBarLayout != null && title != null) {
-                appBarLayout.setTitle(title);
-            } else if (appBarLayout != null) {
-                appBarLayout.setTitle("Error");
+            if(title != null){
+                if(appBarLayout != null){
+                    appBarLayout.setTitle(title);
+                }else if(articleTitle != null){
+                    articleTitle.setText(title);
+                }
             }
 
-            if (backdrop != null && imageUrl != null) {
-                Picasso.with(backdrop.getContext()).load(imageUrl)
-                        .into(backdrop);
+            if(imageUrl != null){
+                if(backdrop != null){
+                    Picasso.with(backdrop.getContext()).load(imageUrl)
+                            .into(backdrop);
+                }else if(articleImage != null){
+                    Picasso.with(articleImage.getContext()).load(imageUrl)
+                            .into(articleImage);
+                }
             }
 
             if (text != null) {
