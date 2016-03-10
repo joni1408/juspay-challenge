@@ -23,6 +23,7 @@ public class ArticleDetailFragment extends Fragment {
     private CollapsingToolbarLayout appBarLayout;
     private ImageView backdrop;
     private TextView article;
+
     public ArticleDetailFragment() {
     }
 

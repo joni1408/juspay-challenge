@@ -5,11 +5,14 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,12 +23,14 @@ import org.xmlpull.v1.XmlPullParserException;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 
-public class ArticleListActivity extends AppCompatActivity {
+public class ArticleListActivity extends AppCompatActivity implements SearchView.OnQueryTextListener {
 
     private boolean mTwoPane;
     private RecyclerView mRecyclerView;
+    private List<Article> mList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,6 +59,15 @@ public class ArticleListActivity extends AppCompatActivity {
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_article_list_activity, menu);
+        MenuItem searchItem = menu.findItem(R.id.action_search);
+        final SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
+        searchView.setOnQueryTextListener(this);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == android.R.id.home) {
@@ -63,12 +77,38 @@ public class ArticleListActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public class ArticlesRecyclerViewHolder
-            extends RecyclerView.Adapter<ArticlesRecyclerViewHolder.ViewHolder> {
+    @Override
+    public boolean onQueryTextSubmit(String query) {
+        return false;
+    }
+
+    @Override
+    public boolean onQueryTextChange(String newText) {
+        final List<Article> filteredModelList = filter(mList, newText);
+        ((ArticlesAdapter) mRecyclerView.getAdapter()).update(filteredModelList);
+        mRecyclerView.scrollToPosition(0);
+        return true;
+    }
+
+    private List<Article> filter(List<Article> articles, String query) {
+        query = query.toLowerCase();
+
+        final List<Article> filteredModelList = new ArrayList<>();
+        for (Article article : articles) {
+            final String text = article.getTitle().toLowerCase();
+            if (text.contains(query)) {
+                filteredModelList.add(article);
+            }
+        }
+        return filteredModelList;
+    }
+
+    public class ArticlesAdapter
+            extends RecyclerView.Adapter<ArticlesAdapter.ViewHolder> {
 
         List<Article> articles;
 
-        ArticlesRecyclerViewHolder(List<Article> articles) {
+        ArticlesAdapter(List<Article> articles) {
             this.articles = articles;
         }
 
@@ -108,6 +148,11 @@ public class ArticleListActivity extends AppCompatActivity {
         @Override
         public int getItemCount() {
             return articles.size();
+        }
+
+        public void update(List<Article> articles) {
+            this.articles = articles;
+            notifyDataSetChanged();
         }
 
         public class ViewHolder extends RecyclerView.ViewHolder {
@@ -150,7 +195,8 @@ public class ArticleListActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(List articles) {
             if (articles != null) {
-                mRecyclerView.setAdapter(new ArticlesRecyclerViewHolder(articles));
+                mList = articles;
+                mRecyclerView.setAdapter(new ArticlesAdapter(mList));
             }
         }
     }
