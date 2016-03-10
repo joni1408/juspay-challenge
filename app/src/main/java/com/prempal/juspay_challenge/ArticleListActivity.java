@@ -80,15 +80,16 @@ public class ArticleListActivity extends AppCompatActivity {
         }
 
         @Override
-        public void onBindViewHolder(final ViewHolder holder, int position) {
+        public void onBindViewHolder(final ViewHolder holder, final int position) {
 
             holder.mContentView.setText(articles.get(position).getTitle());
             holder.mView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    String link = articles.get(position).getLink();
                     if (mTwoPane) {
                         Bundle arguments = new Bundle();
-                        arguments.putString(ArticleDetailFragment.ARG_ITEM_ID, "id");
+                        arguments.putString(ArticleDetailFragment.ARG_ITEM_URL, link);
                         ArticleDetailFragment fragment = new ArticleDetailFragment();
                         fragment.setArguments(arguments);
                         getSupportFragmentManager().beginTransaction()
@@ -97,7 +98,7 @@ public class ArticleListActivity extends AppCompatActivity {
                     } else {
                         Context context = v.getContext();
                         Intent intent = new Intent(context, ArticleDetailActivity.class);
-                        intent.putExtra(ArticleDetailFragment.ARG_ITEM_ID, "id");
+                        intent.putExtra(ArticleDetailFragment.ARG_ITEM_URL, link);
                         context.startActivity(intent);
                     }
                 }
