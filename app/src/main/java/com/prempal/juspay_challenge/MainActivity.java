@@ -1,8 +1,8 @@
 package com.prempal.juspay_challenge;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.ImageView;
 
@@ -22,6 +22,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Intent intent = new Intent(view.getContext(), ArticleListActivity.class);
                 intent.putExtra("title", "The Hindu");
+                intent.putExtra("link", "http://www.thehindu.com/news/cities/Delhi/?service=rss");
                 startActivity(intent);
             }
         });

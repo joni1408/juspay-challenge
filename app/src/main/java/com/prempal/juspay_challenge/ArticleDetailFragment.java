@@ -34,7 +34,7 @@ public class ArticleDetailFragment extends Fragment {
             }
 
             ImageView backdrop = (ImageView) activity.findViewById(R.id.backdrop);
-            if(backdrop != null){
+            if (backdrop != null) {
                 Picasso.with(activity).load("http://blogs-images.forbes.com/scottmendelson/files/2015/04/deadpool-movie-costume-pic-2.jpg")
                         .into(backdrop);
             }
